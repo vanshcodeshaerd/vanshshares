@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { isAdmin } from "@/lib/adminAuth";
-import { supabaseAdmin } from "@/lib/supabaseAdmin";
+import { deleteSignup } from "@/lib/db";
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
@@ -10,7 +10,7 @@ export async function DELETE(_req: Request, { params }: { params: Promise<{ id: 
   const { id } = await params;
   if (!UUID.test(id)) return NextResponse.json({ error: "Invalid id" }, { status: 400 });
 
-  const { error } = await supabaseAdmin().from("signups").delete().eq("id", id);
+  const { error } = await deleteSignup(id);
   if (error) return NextResponse.json({ error: "Delete failed" }, { status: 500 });
   return NextResponse.json({ ok: true });
 }

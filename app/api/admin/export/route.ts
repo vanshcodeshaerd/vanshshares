@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { isAdmin } from "@/lib/adminAuth";
-import { supabaseAdmin, type Signup } from "@/lib/supabaseAdmin";
+import { listSignups } from "@/lib/db";
 
 function csvCell(value: string): string {
   // Neutralise spreadsheet formula injection, then quote.
@@ -11,14 +11,11 @@ function csvCell(value: string): string {
 export async function GET() {
   if (!(await isAdmin())) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const { data, error } = await supabaseAdmin()
-    .from("signups")
-    .select("full_name, alias, college_email, created_at")
-    .order("created_at", { ascending: false });
+  const { data, error } = await listSignups();
   if (error) return NextResponse.json({ error: "Failed to load entries" }, { status: 500 });
 
   const header = ["Full name", "Alias", "College email", "Submitted at (UTC)"].map(csvCell).join(",");
-  const rows = (data as Omit<Signup, "id">[]).map((r) =>
+  const rows = data.map((r) =>
     [r.full_name, r.alias, r.college_email, r.created_at].map(csvCell).join(","),
   );
   const csv = [header, ...rows].join("\r\n");

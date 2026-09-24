@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
-import type { Signup } from "@/lib/supabaseAdmin";
+import type { Signup } from "@/lib/db";
 
 const fmt = new Intl.DateTimeFormat("en-IN", {
   dateStyle: "medium",

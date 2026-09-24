@@ -1,6 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { signupSchema } from "@/lib/validation";
-import { supabaseAdmin } from "@/lib/supabaseAdmin";
+import { submitSignup } from "@/lib/db";
 
 export async function POST(req: NextRequest) {
   let body: Record<string, unknown>;
@@ -17,9 +17,7 @@ export async function POST(req: NextRequest) {
   }
 
   const { fullName, alias, collegeEmail } = parsed.data;
-  const { error } = await supabaseAdmin()
-    .from("signups")
-    .insert({ full_name: fullName, alias, college_email: collegeEmail });
+  const { error } = await submitSignup(fullName, alias, collegeEmail);
 
   if (error) {
     if (error.code === "23505") {
@@ -27,6 +25,9 @@ export async function POST(req: NextRequest) {
         { error: "This email has already been registered", fieldErrors: { collegeEmail: ["Already registered"] } },
         { status: 409 },
       );
+    }
+    if (error.code === "22023") {
+      return NextResponse.json({ error: "Please check your details and try again." }, { status: 400 });
     }
     console.error("Insert failed", error);
     return NextResponse.json({ error: "Something went wrong. Please try again." }, { status: 500 });

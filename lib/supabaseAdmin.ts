@@ -5,8 +5,8 @@ let client: SupabaseClient | null = null;
 
 export function supabaseAdmin(): SupabaseClient {
   if (!client) {
-    const url = process.env.SUPABASE_URL;
-    const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
+    const url = (process.env.SUPABASE_URL ?? process.env.NEXT_PUBLIC_SUPABASE_URL)?.trim();
+    const key = process.env.SUPABASE_SERVICE_ROLE_KEY?.trim();
     if (!url || !key) throw new Error("SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY must be set");
     client = createClient(url, key, { auth: { persistSession: false } });
   }

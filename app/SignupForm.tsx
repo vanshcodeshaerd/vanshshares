@@ -15,6 +15,7 @@ export default function SignupForm() {
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
   const [formError, setFormError] = useState("");
   const [token, setToken] = useState("");
+  const [widgetFailed, setWidgetFailed] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [done, setDone] = useState(false);
   const turnstileRef = useRef<TurnstileInstance>(null);
@@ -34,7 +35,11 @@ export default function SignupForm() {
       return;
     }
     if (!token) {
-      setFormError("Please complete the verification check.");
+      setFormError(
+        widgetFailed
+          ? "The security check couldn't load. Refresh the page and try again."
+          : "Please complete the verification check.",
+      );
       return;
     }
 
@@ -131,10 +136,17 @@ export default function SignupForm() {
       <div className="flex justify-center overflow-hidden">
         <Turnstile
           ref={turnstileRef}
-          siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY ?? ""}
-          onSuccess={setToken}
+          siteKey={(process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY ?? "").trim()}
+          onSuccess={(t) => {
+            setToken(t);
+            setWidgetFailed(false);
+          }}
           onExpire={() => setToken("")}
-          onError={() => setToken("")}
+          onError={(code) => {
+            setToken("");
+            setWidgetFailed(true);
+            console.error("Turnstile error", code);
+          }}
           options={{ theme: "light", size: "flexible" }}
         />
       </div>

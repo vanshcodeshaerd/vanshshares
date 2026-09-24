@@ -1,7 +1,7 @@
 import "server-only";
 
 export async function verifyTurnstile(token: string, ip?: string | null): Promise<boolean> {
-  const secret = process.env.TURNSTILE_SECRET_KEY;
+  const secret = process.env.TURNSTILE_SECRET_KEY?.trim();
   if (!secret || !token) return false;
 
   const body = new URLSearchParams({ secret, response: token });

@@ -26,7 +26,7 @@ Built with Next.js 15 (App Router), Tailwind CSS 4, Supabase and Cloudflare Turn
 ```bash
 npm install
 npm run dev      # http://localhost:3000
-npm run lint
+npm run lint     # TypeScript type check
 npm run build
 ```
 

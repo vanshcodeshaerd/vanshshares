@@ -1,0 +1,16 @@
+@import "tailwindcss";
+
+@theme {
+  --color-brand: #ff9900;
+  --color-brand-dark: #e68a00;
+  --color-ink: #0f172a;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  background: #f5f7fb;
+  color: var(--color-ink);
+}

@@ -26,7 +26,7 @@ export default function AdminLogin() {
         return;
       }
       const data = await res.json().catch(() => ({}));
-      setError(data.error ?? "Login failed");
+      setError(data.error ?? `Login failed (error ${res.status})`);
     } catch {
       setError("Network error");
     } finally {

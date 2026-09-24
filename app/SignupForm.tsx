@@ -1,7 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
-import { Turnstile, type TurnstileInstance } from "@marsidev/react-turnstile";
+import { useState } from "react";
 import { COLLEGE_DOMAIN, signupSchema } from "@/lib/validation";
 
 type Fields = "fullName" | "alias" | "collegeEmail";
@@ -14,11 +13,8 @@ export default function SignupForm() {
   const [values, setValues] = useState({ fullName: "", alias: "", collegeEmail: "" });
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
   const [formError, setFormError] = useState("");
-  const [token, setToken] = useState("");
-  const [widgetFailed, setWidgetFailed] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [done, setDone] = useState(false);
-  const turnstileRef = useRef<TurnstileInstance>(null);
 
   const update = (key: Fields) => (e: React.ChangeEvent<HTMLInputElement>) => {
     setValues((v) => ({ ...v, [key]: e.target.value }));
@@ -34,21 +30,13 @@ export default function SignupForm() {
       setFieldErrors(parsed.error.flatten().fieldErrors);
       return;
     }
-    if (!token) {
-      setFormError(
-        widgetFailed
-          ? "The security check couldn't load. Refresh the page and try again."
-          : "Please complete the verification check.",
-      );
-      return;
-    }
 
     setSubmitting(true);
     try {
       const res = await fetch("/api/submit", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...values, turnstileToken: token }),
+        body: JSON.stringify(values),
       });
       const data = await res.json().catch(() => ({}));
       if (res.ok) {
@@ -62,9 +50,6 @@ export default function SignupForm() {
     } finally {
       setSubmitting(false);
     }
-    // Tokens are single-use, so get a fresh one after any failed attempt.
-    setToken("");
-    turnstileRef.current?.reset();
   }
 
   if (done) {
@@ -132,24 +117,6 @@ export default function SignupForm() {
         { type: "email", autoComplete: "email", inputMode: "email", autoCapitalize: "none", placeholder: `yourname@${COLLEGE_DOMAIN}` },
         `The @${COLLEGE_DOMAIN} email used during sign-up`,
       )}
-
-      <div className="flex justify-center overflow-hidden">
-        <Turnstile
-          ref={turnstileRef}
-          siteKey={(process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY ?? "").trim()}
-          onSuccess={(t) => {
-            setToken(t);
-            setWidgetFailed(false);
-          }}
-          onExpire={() => setToken("")}
-          onError={(code) => {
-            setToken("");
-            setWidgetFailed(true);
-            console.error("Turnstile error", code);
-          }}
-          options={{ theme: "light", size: "flexible" }}
-        />
-      </div>
 
       {formError && (
         <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700" role="alert">

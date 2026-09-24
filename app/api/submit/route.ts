@@ -1,6 +1,5 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { signupSchema } from "@/lib/validation";
-import { verifyTurnstile } from "@/lib/turnstile";
 import { supabaseAdmin } from "@/lib/supabaseAdmin";
 
 export async function POST(req: NextRequest) {
@@ -9,12 +8,6 @@ export async function POST(req: NextRequest) {
     body = await req.json();
   } catch {
     return NextResponse.json({ error: "Invalid request" }, { status: 400 });
-  }
-
-  const ip = req.headers.get("cf-connecting-ip") ?? req.headers.get("x-forwarded-for")?.split(",")[0]?.trim();
-  const human = await verifyTurnstile(String(body.turnstileToken ?? ""), ip);
-  if (!human) {
-    return NextResponse.json({ error: "Verification failed. Please try the check again." }, { status: 400 });
   }
 
   const parsed = signupSchema.safeParse(body);

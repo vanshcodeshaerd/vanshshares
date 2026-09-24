@@ -1,8 +1,8 @@
 # Campus Leader Sign-up
 
-Students confirm their AWS Builder Center sign-up (full name, alias, `@nuv.ac.in` email). Each submission is checked with Cloudflare Turnstile and stored in Supabase. An admin portal at `/admin` lists the entries, with search, delete and CSV export.
+Students confirm their AWS Builder Center sign-up (full name, alias, `@nuv.ac.in` email). Each submission is stored in Supabase. An admin portal at `/admin` lists the entries, with search, delete and CSV export.
 
-Built with Next.js 15 (App Router), Tailwind CSS 4, Supabase and Cloudflare Turnstile. It deploys to Vercel.
+Built with Next.js 15 (App Router), Tailwind CSS 4, and Supabase. It deploys to Vercel.
 
 | URL | Who |
 |---|---|
@@ -17,8 +17,7 @@ Built with Next.js 15 (App Router), Tailwind CSS 4, Supabase and Cloudflare Turn
 ## Setup
 
 1. **Supabase**: create a project, then run `supabase/migrations/0001_signups.sql` in the SQL editor. The table has RLS on with no policies, so only the server (service-role key) can access it.
-2. **Cloudflare Turnstile**: in the Cloudflare dashboard, go to Turnstile and add a widget. Add your Vercel domain (and `localhost` for dev) to the widget's hostnames, then copy the site key and secret key.
-3. **Environment variables**: copy `.env.example` to `.env.local` and fill it in. Set the same variables in Vercel under Project → Settings → Environment Variables.
+2. **Environment variables**: copy `.env.example` to `.env.local` and fill it in. Set the same variables in Vercel under Project → Settings → Environment Variables.
    - `ADMIN_SESSION_SECRET`: at least 32 random characters (`openssl rand -hex 32`).
 
 ## Develop

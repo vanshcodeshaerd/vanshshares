@@ -9,7 +9,6 @@
     "lint": "tsc --noEmit"
   },
   "dependencies": {
-    "@marsidev/react-turnstile": "^1.6.1",
     "@supabase/supabase-js": "^2.117.1",
     "jose": "^6.2.12",
     "next": "^15.5.26",

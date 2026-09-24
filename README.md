@@ -9,6 +9,11 @@ Built with Next.js 15 (App Router), Tailwind CSS 4, Supabase and Cloudflare Turn
 | `/` | Students (point your bit.ly link here) |
 | `/admin` | You (username and password from env vars) |
 
+## Live setup
+
+- Vercel project: `nuv-campus-leader` (team `vansh20072006-gmailcom's projects`), production branch `claude/admiring-maxwell-b0orph`
+- Supabase project: `campus-leader-signups` (`qeomdzexohmsfobguurq`, ap-south-1), with the migration applied
+
 ## Setup
 
 1. **Supabase**: create a project, then run `supabase/migrations/0001_signups.sql` in the SQL editor. The table has RLS on with no policies, so only the server (service-role key) can access it.

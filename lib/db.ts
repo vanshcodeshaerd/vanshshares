@@ -7,6 +7,7 @@ const DEFAULT_URL = "https://qeomdzexohmsfobguurq.supabase.co";
 const DEFAULT_PUBLISHABLE_KEY = "sb_publishable_Twusln70CdVaV8zCKCiymA_0h9wXTbG";
 
 let client: SupabaseClient | null = null;
+let adminClient: SupabaseClient | null = null;
 
 function db(): SupabaseClient {
   if (!client) {
@@ -19,6 +20,16 @@ function db(): SupabaseClient {
     client = createClient(url, key, { auth: { persistSession: false } });
   }
   return client;
+}
+
+function adminDb(): SupabaseClient | null {
+  const secretKey = (process.env.SUPABASE_SECRET_KEY ?? process.env.SUPABASE_SERVICE_ROLE_KEY)?.trim();
+  if (!secretKey) return null;
+  if (!adminClient) {
+    const url = (process.env.SUPABASE_URL ?? process.env.NEXT_PUBLIC_SUPABASE_URL ?? DEFAULT_URL).trim();
+    adminClient = createClient(url, secretKey, { auth: { persistSession: false } });
+  }
+  return adminClient;
 }
 
 /** The database checks this against the SHA-256 stored in private.app_config. */
@@ -46,11 +57,25 @@ export async function submitSignup(fullName: string, alias: string, collegeEmail
 }
 
 export async function listSignups(): Promise<{ data: Signup[]; error: PostgrestError | null }> {
+  const adb = adminDb();
+  if (adb) {
+    const { data, error } = await adb
+      .from("signups")
+      .select("id, full_name, alias, college_email, created_at")
+      .order("created_at", { ascending: false });
+    return { data: (data ?? []) as Signup[], error };
+  }
   const { data, error } = await db().rpc("admin_list_signups", { p_token: adminToken() });
   return { data: (data ?? []) as Signup[], error };
 }
 
 export async function deleteSignup(id: string) {
+  const adb = adminDb();
+  if (adb) {
+    const { error } = await adb.from("signups").delete().eq("id", id);
+    return { error };
+  }
   const { error } = await db().rpc("admin_delete_signup", { p_token: adminToken(), p_id: id });
   return { error };
 }
+

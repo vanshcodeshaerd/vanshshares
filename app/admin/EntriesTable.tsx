@@ -89,7 +89,7 @@ export default function EntriesTable({ initialRows }: { initialRows: Signup[] })
                   <th className="px-4 py-3">#</th>
                   <th className="px-4 py-3">Full name</th>
                   <th className="px-4 py-3">Alias</th>
-                  <th className="px-4 py-3">College email</th>
+                  <th className="px-4 py-3">Email</th>
                   <th className="px-4 py-3">Submitted</th>
                   <th className="px-4 py-3" />
                 </tr>

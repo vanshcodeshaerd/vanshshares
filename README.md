@@ -1,6 +1,6 @@
 # Campus Leader Sign-up
 
-Students confirm their AWS Builder Center sign-up (full name, alias, `@nuv.ac.in` email). Each submission is stored in Supabase. An admin portal at `/admin` lists the entries, with search, delete and CSV export.
+Students confirm their AWS Builder Center sign-up (full name, alias, email address like Gmail, university, etc.). Each submission is stored in Supabase. An admin portal at `/admin` lists the entries, with search, delete and CSV export.
 
 Built with Next.js 15 (App Router), Tailwind CSS 4, and Supabase. It deploys to Vercel.
 
@@ -36,5 +36,5 @@ Import this GitHub repo in Vercel (the framework preset is Next.js), add the env
 ## Notes
 
 - Emails are lowercased before they're saved, and a unique index on `lower(college_email)` blocks duplicate sign-ups.
-- The allowed college domain is set in `lib/validation.ts`.
+- Valid email addresses from all domains (e.g. Gmail, Outlook, university domains) are accepted.
 - The admin session is a signed, httpOnly cookie that lasts 12 hours. `ADMIN_SESSION_SECRET` is also the database admin token. If you change it, update its SHA-256 in `private.app_config` too, or the admin page won't load entries.

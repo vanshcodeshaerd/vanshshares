@@ -1,7 +1,5 @@
 import { z } from "zod";
 
-export const COLLEGE_DOMAIN = "nuv.ac.in";
-
 export const signupSchema = z.object({
   fullName: z
     .string()
@@ -18,8 +16,7 @@ export const signupSchema = z.object({
     .string()
     .trim()
     .toLowerCase()
-    .email("Enter a valid email")
-    .regex(/^[^@\s]+@nuv\.ac\.in$/, `Use your @${COLLEGE_DOMAIN} college email`),
+    .email("Enter a valid email address"),
 });
 
 export type SignupInput = z.infer<typeof signupSchema>;

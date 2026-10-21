@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { COLLEGE_DOMAIN, signupSchema } from "@/lib/validation";
+import { signupSchema } from "@/lib/validation";
 
 type Fields = "fullName" | "alias" | "collegeEmail";
 type FieldErrors = Partial<Record<Fields, string[]>>;
@@ -113,9 +113,9 @@ export default function SignupForm() {
       )}
       {field(
         "collegeEmail",
-        "College email ID",
-        { type: "email", autoComplete: "email", inputMode: "email", autoCapitalize: "none", placeholder: `yourname@${COLLEGE_DOMAIN}` },
-        `The @${COLLEGE_DOMAIN} email used during sign-up`,
+        "Email address",
+        { type: "email", autoComplete: "email", inputMode: "email", autoCapitalize: "none", placeholder: "e.g. yourname@gmail.com" },
+        "The email used during your AWS Builder Center sign-up (Gmail, university, etc.)",
       )}
 
       {formError && (

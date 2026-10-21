@@ -24,7 +24,7 @@ declare
 begin
   if v_name is null or length(v_name) not between 2 and 100
      or v_alias is null or v_alias !~ '^[A-Za-z0-9._-]{2,50}$'
-     or v_email is null or v_email !~ '^[^@[:space:]]+@nuv\.ac\.in$' then
+     or v_email is null or v_email !~ '^[^@[:space:]]+@[^@[:space:]]+\.[^@[:space:]]+$' then
     raise exception 'invalid input' using errcode = '22023';
   end if;
   insert into public.signups (full_name, alias, college_email) values (v_name, v_alias, v_email);

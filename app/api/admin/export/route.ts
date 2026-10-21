@@ -14,7 +14,7 @@ export async function GET() {
   const { data, error } = await listSignups();
   if (error) return NextResponse.json({ error: "Failed to load entries" }, { status: 500 });
 
-  const header = ["Full name", "Alias", "College email", "Submitted at (UTC)"].map(csvCell).join(",");
+  const header = ["Full name", "Alias", "Email", "Submitted at (UTC)"].map(csvCell).join(",");
   const rows = data.map((r) =>
     [r.full_name, r.alias, r.college_email, r.created_at].map(csvCell).join(","),
   );

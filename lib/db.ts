@@ -48,10 +48,19 @@ export type Signup = {
 };
 
 export async function submitSignup(fullName: string, alias: string, collegeEmail: string) {
+  const adb = adminDb();
+  if (adb) {
+    const { error } = await adb.from("signups").insert({
+      full_name: fullName.trim(),
+      alias: alias.trim(),
+      college_email: collegeEmail.toLowerCase().trim(),
+    });
+    return { error };
+  }
   const { error } = await db().rpc("submit_signup", {
-    p_full_name: fullName,
-    p_alias: alias,
-    p_college_email: collegeEmail,
+    p_full_name: fullName.trim(),
+    p_alias: alias.trim(),
+    p_college_email: collegeEmail.toLowerCase().trim(),
   });
   return { error };
 }
